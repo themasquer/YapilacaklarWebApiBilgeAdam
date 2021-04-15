@@ -5,6 +5,7 @@ using _037_YapilacaklarWebApiBilgeAdam.Services.Bases;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 
 namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
@@ -35,7 +36,9 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
             }
             catch (Exception exc)
             {
-                return BadRequest();
+                // Web servisi çağıran geliştiriciye hata mesajının detayı gösterilmemeli!
+                //return InternalServerError(exc);
+                return InternalServerError();
             }
         }
 
@@ -51,12 +54,15 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
             {
                 var model = _yapilacakService.GetQuery().SingleOrDefault(y => y.Id == yapilacakId);
                 if (model == null)
+                {
+                    //return StatusCode(HttpStatusCode.NotFound); // bunun yerine aşağıdaki methodu kullanmak daha uygun, ikisi de aynı sonucu yani 404 kodunu döner
                     return NotFound();
+                }
                 return Ok(model);
             }
             catch (Exception exc)
             {
-                return BadRequest();
+                return InternalServerError();
             }
         }
 
@@ -70,12 +76,14 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
             {
                 var model = _yapilacakService.GetQuery().Where(y => y.Tarih >= tarih1 && y.Tarih <= tarih2).ToList();
                 if (model == null || model.Count == 0)
+                {
                     return NotFound();
+                }
                 return Ok(model);
             }
             catch (Exception exc)
             {
-                return BadRequest();
+                return InternalServerError();
             }
         }
 
@@ -89,12 +97,14 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
             {
                 var model = _yapilacakService.GetQuery().Where(y => y.Tarih >= tarihler.Tarih1 && y.Tarih <= tarihler.Tarih2).ToList();
                 if (model == null || model.Count == 0)
+                {
                     return NotFound();
+                }
                 return Ok(model);
             }
             catch (Exception exc)
             {
-                return BadRequest();
+                return InternalServerError();
             }
         }
 
@@ -109,6 +119,9 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
                 {
                     model.CreatedBy = User.Identity.Name;
                     _yapilacakService.Add(model);
+                    //return StatusCode(HttpStatusCode.Created); // 201 yani created kodu yerine geliştiriciye model'i dönmek daha uygun
+                                                                 // çünkü geliştiricinin kayıt oluştuktan sonra başka işlemlerde kullanmak üzere
+                                                                 // oluşan kaydın Id'sine ihtiyacı olabilir
                     return Ok(model);
                 }
                 return BadRequest(ModelState);
@@ -148,7 +161,7 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
             try
             {
                 _yapilacakService.Delete(yapilacakId, User.Identity.Name);
-                return Ok(yapilacakId);
+                return StatusCode(HttpStatusCode.NoContent);
             }
             catch (Exception exc)
             {

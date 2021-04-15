@@ -34,7 +34,7 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
         //    }
         //    catch (Exception exc)
         //    {
-        //        return BadRequest(); // 400: Bad Request
+        //        return InternalServerError(); // 500: Internal Server Error
         //    }
         //}
         public IHttpActionResult GetKullanicilar()
@@ -46,7 +46,7 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
             }
             catch (Exception exc)
             {
-                return BadRequest(); // 400: Bad Request
+                return InternalServerError(); // 500: Internal Server Error
             }
         }
 
@@ -63,7 +63,7 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
             }
             catch (Exception exc)
             {
-                return BadRequest();
+                return InternalServerError();
             }
         }
 
@@ -96,7 +96,9 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
                     _kullaniciService.Add(model);
                     return Ok(model);
                 }
-                return BadRequest(ModelState);
+                //return BadRequest(); // ModelState parametresi modeldeki data annotation'lar olarak tanımlanan
+                                       // validasyon hatalarını geliştiriciye dönmemizi sağlar
+                return BadRequest(ModelState); 
             }
             catch (Exception exc)
             {

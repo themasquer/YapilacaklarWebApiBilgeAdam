@@ -80,20 +80,23 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Services
             //List<Yapilacak> testYapilacaklarEagerLoading1 = _db.Set<Kullanici>().Include("Yapilacaklar").FirstOrDefault(k => k.KullaniciAdi == "cagil").Yapilacaklar;
             //List<Yapilacak> testYapilacaklarEagerLoading2 = _db.Set<Kullanici>().Include(k => k.Yapilacaklar).FirstOrDefault(k => k.KullaniciAdi == "cagil").Yapilacaklar;
 
-            return _db.Set<Kullanici>().Where(k => !k.IsDeleted).Select(k => new KullaniciModel()
-            {
-                Id = k.Id,
-                Adi = k.Adi,
-                Soyadi = k.Soyadi,
-                KullaniciAdi = k.KullaniciAdi,
-                Yapilacaklar = k.Yapilacaklar.Where(y => !y.IsDeleted).Select(y => new YapilacakModel()
+            return _db.Set<Kullanici>()
+                //.Include("Yapilacaklar")
+                .Include(k => k.Yapilacaklar)
+                .Where(k => !k.IsDeleted).Select(k => new KullaniciModel()
                 {
-                    Id = y.Id,
-                    Gorev = y.Gorev,
-                    Tarih = y.Tarih,
-                    YapildiMi = y.YapildiMi
-                }).ToList()
-            }).ToList();
+                    Id = k.Id,
+                    Adi = k.Adi,
+                    Soyadi = k.Soyadi,
+                    KullaniciAdi = k.KullaniciAdi,
+                    Yapilacaklar = k.Yapilacaklar.Where(y => !y.IsDeleted).Select(y => new YapilacakModel()
+                    {
+                        Id = y.Id,
+                        Gorev = y.Gorev,
+                        Tarih = y.Tarih,
+                        YapildiMi = y.YapildiMi
+                    }).ToList()
+                }).ToList();
         }
     }
 }

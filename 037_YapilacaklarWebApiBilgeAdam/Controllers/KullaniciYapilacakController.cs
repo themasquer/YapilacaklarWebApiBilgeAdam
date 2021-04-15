@@ -28,7 +28,7 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
             }
             catch (Exception exc)
             {
-                return BadRequest();
+                return InternalServerError();
             }
         }
     }
