@@ -79,7 +79,7 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
         //            _kullaniciService.Add(model);
         //            return Ok(model);
         //        }
-        //        return BadRequest();
+        //        return BadRequest(ModelState);
         //    }
         //    catch (Exception exc)
         //    {
@@ -96,7 +96,7 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
                     _kullaniciService.Add(model);
                     return Ok(model);
                 }
-                return BadRequest();
+                return BadRequest(ModelState);
             }
             catch (Exception exc)
             {
@@ -116,7 +116,7 @@ namespace _037_YapilacaklarWebApiBilgeAdam.Controllers
                     _kullaniciService.Update(model);
                     return Ok(model);
                 }
-                return BadRequest();
+                return BadRequest(ModelState);
             }
             catch (Exception exc)
             {
